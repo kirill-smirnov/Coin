@@ -128,9 +128,9 @@ class Block {
 class Blockchain {
   constructor() {
     this.chain = [this.createGenesisBlock()];
-    this.difficulty = 2;
+    this.difficulty = 4;
     this.pendingTransactions = [];
-    this.miningReward = 100;
+    this.miningReward = 0.1;
   }
 
   /**
@@ -159,12 +159,11 @@ class Blockchain {
    */
   minePendingTransactions(miningRewardAddress) {
     const rewardTx = new Transaction(null, miningRewardAddress, this.miningReward);
+
     this.pendingTransactions.push(rewardTx);
 
     let block = new Block(Date.now(), this.pendingTransactions, this.getLatestBlock().hash);
     block.mineBlock(this.difficulty);
-
-    console.log('Block successfully mined!');
     this.chain.push(block);
 
     this.pendingTransactions = [];
@@ -188,6 +187,23 @@ class Blockchain {
     }
 
     this.pendingTransactions.push(transaction);
+  }
+
+
+  createAndAddTransaction(from, to, amount, privateKey) {
+    if (amount <= 0) {
+      throw new Error('Amount shoulds be more than 0.');
+    }
+    if (amount > this.getBalanceOfAddress(from)) {
+      throw new Error('Amount should be more than your balance.');
+    }
+
+
+    const tx = new Transaction(from, to, amount);
+
+    tx.signTransaction(privateKey);
+
+    this.addTransaction(tx);
   }
 
   /**

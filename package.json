@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha tests/*.test.js",
     "lint": "eslint src/**",
-    "coverage": "nyc npm test && nyc report --reporter=text-lcov | coveralls"
+    "start": "node src/main.js"
   },
   "author": "Xavier Decuyper <hi@savjee.be>",
   "license": "MIT",
