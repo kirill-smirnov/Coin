@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>kCoin</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+</head>
+<body>
+  <div id="app"class="container">
+    <h1>Welcome to kCoin</h1>
+    <div v-if="keyPair">
+      <p>Your public key is {{ keyPair.publicKey }}</p>
+      <p>Your balance  is {{ balance }} kCoins.</p>
+      <p v-if="isMining">Mining...</p>
+      <button v-on:click="mine()" class="btn btn-danger">Mine</button>
+    </div>
+    <div v-else>
+      <p>Please sign up or login</p>
+      <button v-on:click="signup()" class="btn btn-primary">I'm new</button>
+      <button v-on:click="showForm = !showForm" class="btn btn-secondary">No,just let me in</button>
+
+      <form v-if="showForm" action="#">
+        <div class="form-group">
+          <label for="public">Public  Key</label>
+          <input class="form-control" type="text" name="public">
+        </div>
+        <div class="form-group">
+          <label for="private">Private  Key</label>
+          <input class="form-control" type="password" name="private">
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="bundle.js"></script>
+</body>
+</html>

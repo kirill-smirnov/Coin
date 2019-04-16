@@ -105,7 +105,7 @@ class Block {
       this.hash = this.calculateHash();
     }
 
-    console.log(`Block mined: ${this.hash}`);
+    //console.log(`Block mined: ${this.hash}`);
   }
 
   /**
@@ -128,9 +128,9 @@ class Block {
 class Blockchain {
   constructor() {
     this.chain = [this.createGenesisBlock()];
-    this.difficulty = 4;
+    this.difficulty = 3;
     this.pendingTransactions = [];
-    this.miningReward = 0.1;
+    this.miningReward = 0.001;
   }
 
   /**

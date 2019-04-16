@@ -9,13 +9,18 @@ const myKey = ec.keyFromPrivate('7c4c45907dec40c91bab3480c39032e90049f1a44f3e18c
 const myWalletAddress = myKey.getPublic('hex');
 
 // Create new instance of Blockchain class
-const kryaCoin = new Blockchain();
+const kCoin = new Blockchain();
 
 // Create a transaction & sign it with your key
-kryaCoin.minePendingTransactions(myWalletAddress);
+kCoin.minePendingTransactions(myWalletAddress);
 
-kryaCoin.createAndAddTransaction(myWalletAddress, 'wallet1', 0.05, myKey);
+kCoin.createAndAddTransaction(myWalletAddress, 'wallet1', 0.05, myKey);
 
-setInterval(() => {
-  kryaCoin.minePendingTransactions(myWalletAddress);
-}, 100);
+kCoin.minePendingTransactions(myWalletAddress);
+
+console.log(JSON.stringify(kCoin))
+
+
+// setInterval(() => {
+//   kCoin.minePendingTransactions(myWalletAddress);
+// }, 100);
