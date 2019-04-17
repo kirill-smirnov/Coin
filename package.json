@@ -6,7 +6,8 @@
   "scripts": {
     "test": "mocha tests/*.test.js",
     "lint": "eslint src/**",
-    "start": "node src/main.js"
+    "start": "node src/main.js",
+    "build": "webpack -p"
   },
   "author": "Xavier Decuyper <hi@savjee.be>",
   "license": "MIT",
