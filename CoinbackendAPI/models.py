@@ -35,6 +35,10 @@ class Block(db.Model):
   hash = db.Column(db.String(128))
   previous_hash = db.Column(db.String(128))
 
+
+  # def add_transaction(self):
+    
+
 class Transaction(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   timestamp = db.Column(db.Integer)

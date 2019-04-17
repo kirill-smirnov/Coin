@@ -76,9 +76,10 @@ def users():
   
 
 @app.route('/transactions/add', methods=["POST"])
+@jwt_refresh_token_required
 def transactions():
-  private_key = request.json["from_address"]
-  to_address = request.json["to_address"]
+  private_key = request.json["fromAddress"]
+  to_address = request.json["toAddress"]
   amount = request.json["amount"]
 
   sender = User.query.filter_by(private_key=private_key).first()
@@ -99,6 +100,45 @@ def transactions():
   db.session.add(t2)
   db.session.add(sender_blockchain)
   db.session.add(receiver_blockchain)
+  db.session.commit()
+
+  return jsonify({
+    "message": "ok"
+  })
+
+@app.route('/block/add', methods=["POST"])
+def block():
+  previous_hash = request.json["previousHash"]
+  _hash = request.json["hash"]
+  timestamp = request.json["timestamp"]
+  transactions = request.json["transactions"]
+  address = transactions[0]["toAddress"]
+  amount = 0
+
+  for transaction in transactions:
+    amount += transaction["amount"]
+
+  u = User.query.filter_by(public_key=address).first()
+  blockchain = Blockchain.query.filter_by(id=u.blockchain).first()
+
+  block = Block(timestamp=timestamp, previous_hash=previous_hash, hash=_hash, blockchain_id=blockchain.id)
+
+  tr = Transaction(timestamp=timestamp, amount=amount, from_address=None, to_address=address)
+
+  db.session.add(tr)
+
+  for transaction in Transaction.query.filter_by(blockchain_id=blockchain.id, block_id=None):
+    transaction.block_id = block.id
+    transaction.blockchain_id = None
+
+    print(block.transactions)
+    block.transactions.append(transaction)
+
+    db.session.add(transaction)
+
+  block.transactions.append(tr)
+
+  db.session.add(block)  
   db.session.commit()
 
   return jsonify({
