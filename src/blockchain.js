@@ -126,8 +126,9 @@ class Block {
 }
 
 class Blockchain {
-  constructor() {
-    this.chain = [this.createGenesisBlock()];
+  constructor(previousHash = "0") {
+    this.chain = [];
+    this.previousHash = previousHash;
     this.difficulty = 3;
     this.pendingTransactions = [];
     this.miningReward = 0.001;
@@ -162,7 +163,19 @@ class Blockchain {
 
     this.pendingTransactions.push(rewardTx);
 
-    let block = new Block(Date.now(), this.pendingTransactions, this.getLatestBlock().hash);
+    this.createBlock();
+  }
+
+
+  createBlock() {
+    let prevHash;
+
+    if (this.chain.length)
+      prevHash = this.getLatestBlock().hash;
+    else
+      prevHash = this.previousHash;
+
+    let block = new Block(Date.now(), this.pendingTransactions, prevHash);
     block.mineBlock(this.difficulty);
     this.chain.push(block);
 
@@ -177,14 +190,14 @@ class Blockchain {
    * @param {Transaction} transaction
    */
   addTransaction(transaction) {
-    if (!transaction.fromAddress || !transaction.toAddress) {
-      throw new Error('Transaction must include from and to address');
-    }
+    // if (!transaction.fromAddress || !transaction.toAddress) {
+    //   throw new Error('Transaction must include from and to address');
+    // }
 
-    // Verify the transactiion
-    if (!transaction.isValid()) {
-      throw new Error('Cannot add invalid transaction to chain');
-    }
+    // // Verify the transactiion
+    // if (!transaction.isValid()) {
+    //   throw new Error('Cannot add invalid transaction to chain');
+    // }
 
     this.pendingTransactions.push(transaction);
   }
@@ -194,14 +207,14 @@ class Blockchain {
     if (amount <= 0) {
       throw new Error('Amount shoulds be more than 0.');
     }
-    if (amount > this.getBalanceOfAddress(from)) {
+    if (from && amount > this.getBalanceOfAddress(from)) {
       throw new Error('Amount should be more than your balance.');
     }
 
 
     const tx = new Transaction(from, to, amount);
 
-    tx.signTransaction(privateKey);
+    //tx.signTransaction(privateKey);
 
     this.addTransaction(tx);
   }

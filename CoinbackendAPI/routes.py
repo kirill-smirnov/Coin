@@ -57,10 +57,17 @@ def login():
   elif u.check_password(password):
     access_token = create_access_token(identity = u.id)
     refresh_token = create_refresh_token(identity = u.id)
+
+    b = Blockchain.query.filter_by(id=u.blockchain).first()
+    last_block = b.blocks[-1]
+
+
     return jsonify({
       "message": "ok",
-      'access_token': access_token,
-      'refresh_token': refresh_token
+      "publicKey": u.public_key,
+      "privateKey": u.private_key,
+      'refreshToken': refresh_token,
+      "lastBlock": last_block.previous_hash
     })
 
   else:
@@ -73,7 +80,17 @@ def login():
 @jwt_refresh_token_required
 def users():
   return jsonify([x.as_dict for x in User.query.all()])
-  
+
+@app.route('/get_balance', methods=["POST"])
+#@jwt_refresh_token_required
+def balance():
+  u = User.query.filter_by(username=request.json["username"]).first()
+  b = Blockchain.query.filter_by(id=u.blockchain).first().get_balance()
+
+  return jsonify({
+    "message": "ok",
+    "balance": b
+    })
 
 @app.route('/transactions/add', methods=["POST"])
 @jwt_refresh_token_required

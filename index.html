@@ -7,32 +7,39 @@
 
 </head>
 <body>
-  <div id="app"class="container">
+
+  <div id="app" class="container">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#">kCoin</a>
+      <div class="ml-auto" id="navbarSupportedContent">
+    
+        <form class="form-inline" action="#" v-on:submit.prevent>     
+          <div class="form-group">
+            <input class="form-control" type="text" name="public" v-model="username" placeholder="Username">
+          </div>
+          <div class="form-group">
+            <input class="form-control" type="password" name="private" v-model="password" placeholder="Password">
+          </div>
+          <button v-on:click="login()" class="btn btn-primary">Login!</button>
+        </form>
+      </div>
+    </nav>
+                
     <h1>Welcome to kCoin</h1>
-    <div v-if="keyPair">
-      <p>Your public key is {{ keyPair.publicKey }}</p>
-      <p>Your balance  is {{ balance }} kCoins.</p>
-      <p v-if="isMining">Mining...</p>
-      <button v-on:click="mine()" class="btn btn-danger">Mine</button>
+      <p class="alert alert-danger" role="alert" v-if="error">{{error}}</p>
+      <div v-if="keyPair">
+        <p>Your public key is {{ keyPair.publicKey }}</p>
+        <p>Your balance  is {{ balance }} kCoins.</p>
+        <p v-if="isMining">Mining...</p>
+        <button v-on:click="mine()" class="btn btn-danger">Mine</button>
+      </div>
+      <div v-else>
+        <p>Sign up</p>
+        <button v-on:click="signup()" class="btn btn-primary">I'm new!</button>
+      </div>
     </div>
-    <div v-else>
-      <p>Please sign up or login</p>
-      <button v-on:click="signup()" class="btn btn-primary">I'm new</button>
-      <button v-on:click="showForm = !showForm" class="btn btn-secondary">No,just let me in</button>
 
-      <form v-if="showForm" action="#">
-        <div class="form-group">
-          <label for="public">Public  Key</label>
-          <input class="form-control" type="text" name="public">
-        </div>
-        <div class="form-group">
-          <label for="private">Private  Key</label>
-          <input class="form-control" type="password" name="private">
-        </div>
-      </form>
-    </div>
   </div>
-
   <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
   <script src="bundle.js"></script>
 </body>

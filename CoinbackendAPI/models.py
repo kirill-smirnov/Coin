@@ -27,6 +27,21 @@ class Blockchain(db.Model):
   blocks = db.relationship('Block', backref='blockchain', lazy="dynamic")
   pending_transactions = db.relationship('Transaction', backref='blockchain', lazy="dynamic")
 
+  def get_balance(self):
+    balance = 0
+    address = User.query.filter_by(id=self.user_id).first().public_key
+
+    for block in self.blocks:
+      #block = Block.query.filter_by(id=block_id).first()
+      for transaction in block.transactions:
+        #transaction = Transaction.query.filter_by(id=transaction_id).first()
+        if transaction.from_address == address:
+          balance -= transaction.amount
+        elif transaction.to_address == address:
+          balance += transaction.amount
+
+    return balance
+
 class Block(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   timestamp = db.Column(db.Integer)
